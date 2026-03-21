@@ -11,22 +11,54 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-
-}
-
-model Login {
-  id Int @id @default(autoincrement())
-  email String @unique
-  password String
 }
 
 model User{
   id Int @id @default(autoincrement())
   name String
-  age Int
-  height Float
-  weight Float
+  email String @unique
+  password String
+  age Int?
+  height Float?
+  weight Float?
 
+  meals Meal[]
+  
 }
 
+model Meal{
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  user User @relation(fields:[id], references:[id])
+  userId Int
+  items MealFood[]
+}
+// Think of it like this:
+//
+// Food = the item itself (e.g., Chicken)
+// Meal = the event (e.g., Lunch at 1 PM)
+// MealFood = the actual consumption (e.g., 200g chicken in that lunch)
+//
+// Same food can appear in multiple meals, but each time with different quantity and nutrition.
+// That’s why the relationship (MealFood) is where the real data lives.
+
+model Food{
+  id Int @id @default(autoincrement())
+  name String @unique
+  items MealFood[]
+
+}
+model MealFood {
+  quantity Float
+  protein  Float
+  carbs    Float
+  fat      Float
+  calories Float
+  meal     Meal   @relation(fields: [mealId], references: [id])
+  mealId   Int
+  food     Food   @relation(fields: [foodId], references: [id])
+  foodId   Int
+
+  @@id([mealId, foodId])
+}
 
