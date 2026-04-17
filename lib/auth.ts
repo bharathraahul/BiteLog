@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken"
+import jwt, { JwtPayload } from "jsonwebtoken"
 
 
 export async function verifyToken(request:Request){
@@ -12,7 +12,7 @@ export async function verifyToken(request:Request){
     const authToken = authHeader.split(" ")[1]
 
     try{
-        const decoded = jwt.verify(authToken,process.env.JWT_SECRET!)
+        const decoded = jwt.verify(authToken,process.env.JWT_SECRET!) as JwtPayload
         return decoded
 
     }catch{
