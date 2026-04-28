@@ -1,4 +1,7 @@
 import { verifyToken } from "@/lib/auth"
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient()
 
 export async function POST(request:Request){
 
@@ -47,4 +50,35 @@ export async function POST(request:Request){
 
 const data = await response.json()
 const nutrition = JSON.parse(data.content[0].text)
+
+const meal1 = await prisma.meal.create({
+    data: {
+        name: nutrition.name,
+    }
+})
+
+const Food = await prisma.food.upsert({
+    where: {name: nutrition.name},
+    update:{},
+    create:{name:nutrition.name}
+    
+})
+
+const mealFood = await prisma.mealFood.create({
+    data: {
+        calories: nutrition.calories,
+        protein: nutrition.protein,
+        carbs: nutrition.carbs,
+        fat: nutrition.fat,
+        quantity: nutrition.quantity || 1,
+        meal: {
+            connect: {id: (await meal1).id}
+        },
+        food:{
+            connect:{id:Food.id}
+        }
+    }
+})
+
+return Response.json({message:"Meal analyzed and saved", meal: await meal1, nutrition: await mealFood}, {status:200})
 }
