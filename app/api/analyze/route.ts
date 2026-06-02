@@ -1,7 +1,5 @@
 import { verifyToken } from "@/lib/auth"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/lib/prisma"
 
 export async function POST(request:Request){
 
@@ -72,7 +70,7 @@ const mealFood = await prisma.mealFood.create({
         fat: nutrition.fat,
         quantity: nutrition.quantity || 1,
         meal: {
-            connect: {id: (await meal1).id}
+            connect: {id:  meal1.id}
         },
         food:{
             connect:{id:Food.id}

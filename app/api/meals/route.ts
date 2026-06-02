@@ -1,5 +1,5 @@
 import { verifyToken } from "@/lib/auth";
-import { prisma } from "@/prisma/prisma";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(request:Request){
     try{
@@ -10,3 +10,4 @@ export async function GET(request:Request){
         return Response.json({message:"Unauthorized"},{status:401})
     }
 }
+

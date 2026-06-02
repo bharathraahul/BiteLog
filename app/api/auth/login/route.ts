@@ -1,4 +1,4 @@
-import { prisma } from "@/prisma/prisma";
+import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
@@ -20,4 +20,9 @@ export async function Login(request: Request, response: Response){
     }
 
     return Response.json({message:"Invalid email or password"},{status:401})
+}
+
+
+export async function Logout(request: Request){
+    
 }
